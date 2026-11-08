@@ -351,21 +351,23 @@ def run_one(broker, config, scenario, rep, suffix=""):
     if recovery:
         record["broker_recovery"] = recovery
 
-    # First post-kill acknowledgement delay from the source ack log.
+    # Longest gap between consecutive successful acknowledgements in
+    # the source ack log. In a broker_kill run this is the outage
+    # silence. (An earlier version measured across the trigger
+    # timestamp, which precedes the actual container kill and so
+    # produced artifacts; scripts/ack_gap_analysis.py recomputes this
+    # same quantity from the raw logs for the published tables.)
     if scenario == "broker_kill" and kill_at:
         try:
-            last_pre = None
-            first_post = None
+            acks = []
             with open(os.path.join(workdir, "ack_log.jsonl")) as fh:
                 for line in fh:
                     rec = json.loads(line)
                     if rec["err"] is None:
-                        if rec["t_ack"] <= kill_at:
-                            last_pre = rec["t_ack"]
-                        elif first_post is None:
-                            first_post = rec["t_ack"]
-            if last_pre is not None and first_post is not None:
-                record["ack_gap_ms"] = first_post - last_pre
+                        acks.append(rec["t_ack"])
+            acks.sort()
+            if len(acks) >= 2:
+                record["ack_gap_ms"] = max(b - a for a, b in zip(acks, acks[1:]))
         except Exception:
             pass
 

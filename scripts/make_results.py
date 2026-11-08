@@ -22,7 +22,49 @@ def load_runs():
     return runs
 
 
-def enrich(rec):
+def injection_note(rec):
+    """What actually happened to the fault injection in this run,
+    derived from the run record's events and processor summaries."""
+    events = [e.get("event") for e in rec.get("events", [])]
+    p1 = rec.get("proc1_summary") or {}
+    if rec["scenario"] == "consumer_kill":
+        if "consumer_killed" in events:
+            return "SIGKILL delivered; processor restarted after 5 s"
+        return ""
+    if rec["scenario"] == "broker_kill":
+        if "broker_killed" in events:
+            note = "docker kill delivered; broker restarted after 5 s on the same volume"
+            kill_t = next(
+                (e.get("t") for e in rec.get("events", []) if e.get("event") == "broker_killed"),
+                None,
+            )
+            src = rec.get("source_summary") or {}
+            if kill_t is not None and src.get("t_end") is not None and src["t_end"] < kill_t:
+                note += (
+                    "; the source had already fully acknowledged before the kill "
+                    "(it finishes in under a second; the driver's progress check "
+                    "lagged), so the kill interrupted the processor stage"
+                )
+            return note
+        return ""
+    if rec["scenario"] == "rebalance_kill":
+        if "first_processor_killed" in events:
+            return "second member joined; SIGKILL delivered to the first processor"
+        if "_FENCED" in str(p1.get("error", "")):
+            return (
+                "first processor exited by transactional fencing (_FENCED) when the "
+                "second member initialised the shared transactional.id, before the "
+                "scheduled SIGKILL; the second member completed the stream"
+            )
+        if p1.get("status") == "completed":
+            return (
+                "kill not delivered: the first processor completed the whole stream "
+                "inside the 1.0 s window; the second member processed nothing"
+            )
+    return ""
+
+
+def enrich(rec, ack_gaps=None):
     """Derived per-run metrics (Section 8), or None if not computable."""
     if rec.get("status") != "completed" or not rec.get("verifier"):
         return None
@@ -47,11 +89,12 @@ def enrich(rec):
         "unique": ver["unique"],
         "latency": ver["latency_ms"],
         "recovery_ms": (rec.get("broker_recovery") or {}).get("recovery_ms"),
-        "ack_gap_ms": rec.get("ack_gap_ms"),
+        "ack_gap_ms": (ack_gaps or {}).get(rec["runid"], {}).get("max_ack_gap_ms"),
+        "injection_note": injection_note(rec),
     }
 
 
-def cell_runs(runs, config, scenario):
+def cell_runs(runs, config, scenario, ack_gaps=None):
     """Scored runs for one cell: for each rep, the completed record if
     one exists, else the best available record (for status display)."""
     by_rep = {}
@@ -60,9 +103,9 @@ def cell_runs(runs, config, scenario):
             by_rep.setdefault(rec["rep"], []).append(rec)
     scored, display = {}, {}
     for rep, recs in by_rep.items():
-        good = [r for r in recs if enrich(r) is not None]
+        good = [r for r in recs if enrich(r, ack_gaps) is not None]
         if good:
-            scored[rep] = enrich(good[0])
+            scored[rep] = enrich(good[0], ack_gaps)
             display[rep] = good[0]
         else:
             display[rep] = recs[-1]
@@ -76,10 +119,15 @@ def median(vals):
 
 def main():
     runs = load_runs()
+    ack_gaps = {}
+    gaps_path = os.path.join(REPO, "results", "ack_gaps.json")
+    if os.path.exists(gaps_path):
+        with open(gaps_path) as fh:
+            ack_gaps = json.load(fh)
     cells = {}
     for config in CONFIGS:
         for scenario in SCENARIOS:
-            cells[(config, scenario)] = cell_runs(runs, config, scenario)
+            cells[(config, scenario)] = cell_runs(runs, config, scenario, ack_gaps)
 
     # H1
     b_fault_ok = True
@@ -141,10 +189,19 @@ def main():
         "baseline_pipeline_tput_median": {"A": a_tput, "B": b_tput},
         "broker_recovery_ms_median": median(recoveries),
         "a_consumer_kill_dup_runs": a_dup_runs,
+        "ack_gap_definition": (
+            "longest gap between consecutive successful source acknowledgements, "
+            "from scripts/ack_gap_analysis.py over the raw ack logs "
+            "(results/ack_gaps.json); broker_kill runs only"
+        ),
         "cells": {
             f"{c}-{s}": {
                 "scored_reps": sorted(cells[(c, s)][0].keys()),
                 "metrics": cells[(c, s)][0],
+                "injection_notes": {
+                    rep: injection_note(cells[(c, s)][1][rep])
+                    for rep in sorted(cells[(c, s)][1].keys())
+                },
             }
             for c in CONFIGS
             for s in SCENARIOS
@@ -186,8 +243,13 @@ def main():
     lines.append("")
     lines.append("## Correctness counts, every run")
     lines.append("")
-    lines.append("| Run | Status | Duplicates | Losses | Out of order | Unique | Broker recovery (ms) | Ack gap (ms) |")
-    lines.append("| --- | --- | --- | --- | --- | --- | --- | --- |")
+    lines.append("Longest ack gap: the longest interval between consecutive successful")
+    lines.append("source acknowledgements (broker_kill runs), computed by")
+    lines.append("scripts/ack_gap_analysis.py from the raw acknowledgement logs;")
+    lines.append("see results/ack_gaps.json.")
+    lines.append("")
+    lines.append("| Run | Status | Duplicates | Losses | Out of order | Unique | Broker recovery (ms) | Longest ack gap (ms) | Injection note |")
+    lines.append("| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
     for config in CONFIGS:
         for scenario in SCENARIOS:
             scored, display = cells[(config, scenario)]
@@ -197,11 +259,11 @@ def main():
                 if m is not None:
                     lines.append(
                         f"| {rec['runid']} | completed | {m['duplicates']} | {m['losses']} | "
-                        f"{m['out_of_order']} | {m['unique']} | {fnum(m['recovery_ms'])} | {fnum(m['ack_gap_ms'])} |"
+                        f"{m['out_of_order']} | {m['unique']} | {fnum(m['recovery_ms'])} | {fnum(m['ack_gap_ms'])} | {m['injection_note']} |"
                     )
                 else:
                     lines.append(
-                        f"| {rec['runid']} | {rec['status']} | | | | | | |"
+                        f"| {rec['runid']} | {rec['status']} | | | | | | | {injection_note(rec)} |"
                     )
     lines.append("")
     lines.append("## Per-run performance")
