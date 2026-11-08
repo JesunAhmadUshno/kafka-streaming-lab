@@ -1,0 +1,26 @@
+{
+ "A-broker_kill-r1": {
+  "acks_ok": 20001,
+  "max_ack_gap_ms": 22801
+ },
+ "A-broker_kill-r2": {
+  "acks_ok": 20001,
+  "max_ack_gap_ms": 28469
+ },
+ "A-broker_kill-r3": {
+  "acks_ok": 20001,
+  "max_ack_gap_ms": 23505
+ },
+ "B-broker_kill-r1": {
+  "acks_ok": 20001,
+  "max_ack_gap_ms": 1
+ },
+ "B-broker_kill-r2": {
+  "acks_ok": 20001,
+  "max_ack_gap_ms": 1
+ },
+ "B-broker_kill-r3": {
+  "acks_ok": 20001,
+  "max_ack_gap_ms": 1
+ }
+}

@@ -1,0 +1,561 @@
+{
+ "a_consumer_kill_dup_runs": 3,
+ "ack_gap_definition": "longest gap between consecutive successful source acknowledgements, from scripts/ack_gap_analysis.py over the raw ack logs (results/ack_gaps.json); broker_kill runs only",
+ "baseline_pipeline_tput_median": {
+  "A": 5264.54330086865,
+  "B": 3337.7837116154874
+ },
+ "broker_recovery_ms_median": 22406.5,
+ "cells": {
+  "A-baseline": {
+   "injection_notes": {
+    "1": "",
+    "2": "",
+    "3": ""
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "",
+     "latency": {
+      "p50": 6277.0,
+      "p95": 6329.0,
+      "p99": 6333.0
+     },
+     "losses": 0,
+     "makespan_s": 6.724,
+     "out_of_order": 0,
+     "pipeline_tput": 2974.41998810232,
+     "producer_tput": 38461.53846153846,
+     "recovery_ms": null,
+     "runid": "A-baseline-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "",
+     "latency": {
+      "p50": 3305.0,
+      "p95": 3366.0,
+      "p99": 3380.0
+     },
+     "losses": 0,
+     "makespan_s": 3.799,
+     "out_of_order": 0,
+     "pipeline_tput": 5264.54330086865,
+     "producer_tput": 48780.48780487805,
+     "recovery_ms": null,
+     "runid": "A-baseline-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "",
+     "latency": {
+      "p50": 3189.0,
+      "p95": 3246.0,
+      "p99": 3251.0
+     },
+     "losses": 0,
+     "makespan_s": 3.658,
+     "out_of_order": 0,
+     "pipeline_tput": 5467.468562055768,
+     "producer_tput": 49382.71604938271,
+     "recovery_ms": null,
+     "runid": "A-baseline-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  },
+  "A-broker_kill": {
+   "injection_notes": {
+    "1": "docker kill delivered; broker restarted after 5 s on the same volume",
+    "2": "docker kill delivered; broker restarted after 5 s on the same volume",
+    "3": "docker kill delivered; broker restarted after 5 s on the same volume"
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": 22801,
+     "duplicates": 292,
+     "injection_note": "docker kill delivered; broker restarted after 5 s on the same volume",
+     "latency": {
+      "p50": 26347.0,
+      "p95": 26472.0,
+      "p99": 26478.0
+     },
+     "losses": 0,
+     "makespan_s": 26.863,
+     "out_of_order": 291,
+     "pipeline_tput": 744.5184826713323,
+     "producer_tput": 863.9682059700202,
+     "recovery_ms": 22409,
+     "runid": "A-broker_kill-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": 28469,
+     "duplicates": 0,
+     "injection_note": "docker kill delivered; broker restarted after 5 s on the same volume",
+     "latency": {
+      "p50": 26601.0,
+      "p95": 28594.0,
+      "p99": 28605.0
+     },
+     "losses": 0,
+     "makespan_s": 28.977,
+     "out_of_order": 0,
+     "pipeline_tput": 690.2025744556028,
+     "producer_tput": 693.6736958934517,
+     "recovery_ms": 22493,
+     "runid": "A-broker_kill-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": 23505,
+     "duplicates": 0,
+     "injection_note": "docker kill delivered; broker restarted after 5 s on the same volume",
+     "latency": {
+      "p50": 26624.0,
+      "p95": 26678.0,
+      "p99": 26686.0
+     },
+     "losses": 0,
+     "makespan_s": 27.125,
+     "out_of_order": 0,
+     "pipeline_tput": 737.3271889400921,
+     "producer_tput": 836.6800535475235,
+     "recovery_ms": 22408,
+     "runid": "A-broker_kill-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  },
+  "A-consumer_kill": {
+   "injection_notes": {
+    "1": "SIGKILL delivered; processor restarted after 5 s",
+    "2": "SIGKILL delivered; processor restarted after 5 s",
+    "3": "SIGKILL delivered; processor restarted after 5 s"
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": null,
+     "duplicates": 5141,
+     "injection_note": "SIGKILL delivered; processor restarted after 5 s",
+     "latency": {
+      "p50": 48228.0,
+      "p95": 48273.0,
+      "p99": 48276.0
+     },
+     "losses": 0,
+     "makespan_s": 48.642,
+     "out_of_order": 5140,
+     "pipeline_tput": 411.1673039759878,
+     "producer_tput": 54495.91280653951,
+     "recovery_ms": null,
+     "runid": "A-consumer_kill-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": null,
+     "duplicates": 8805,
+     "injection_note": "SIGKILL delivered; processor restarted after 5 s",
+     "latency": {
+      "p50": 48207.0,
+      "p95": 48307.0,
+      "p99": 48312.0
+     },
+     "losses": 0,
+     "makespan_s": 48.672,
+     "out_of_order": 8804,
+     "pipeline_tput": 410.91387245233403,
+     "producer_tput": 55865.9217877095,
+     "recovery_ms": null,
+     "runid": "A-consumer_kill-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": null,
+     "duplicates": 5349,
+     "injection_note": "SIGKILL delivered; processor restarted after 5 s",
+     "latency": {
+      "p50": 48238.0,
+      "p95": 48271.0,
+      "p99": 48276.0
+     },
+     "losses": 0,
+     "makespan_s": 48.644,
+     "out_of_order": 5348,
+     "pipeline_tput": 411.1503988158869,
+     "producer_tput": 53333.333333333336,
+     "recovery_ms": null,
+     "runid": "A-consumer_kill-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  },
+  "A-rebalance_kill": {
+   "injection_notes": {
+    "1": "kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing",
+    "2": "kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing",
+    "3": "kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing"
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing",
+     "latency": {
+      "p50": 3206.0,
+      "p95": 3246.0,
+      "p99": 3250.0
+     },
+     "losses": 0,
+     "makespan_s": 3.654,
+     "out_of_order": 0,
+     "pipeline_tput": 5473.453749315819,
+     "producer_tput": 49875.31172069825,
+     "recovery_ms": null,
+     "runid": "A-rebalance_kill-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing",
+     "latency": {
+      "p50": 3218.0,
+      "p95": 3259.0,
+      "p99": 3263.0
+     },
+     "losses": 0,
+     "makespan_s": 3.636,
+     "out_of_order": 0,
+     "pipeline_tput": 5500.5500550055,
+     "producer_tput": 53619.30294906166,
+     "recovery_ms": null,
+     "runid": "A-rebalance_kill-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing",
+     "latency": {
+      "p50": 3264.0,
+      "p95": 3311.0,
+      "p99": 3313.0
+     },
+     "losses": 0,
+     "makespan_s": 3.689,
+     "out_of_order": 0,
+     "pipeline_tput": 5421.523448088913,
+     "producer_tput": 53191.48936170213,
+     "recovery_ms": null,
+     "runid": "A-rebalance_kill-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  },
+  "B-baseline": {
+   "injection_notes": {
+    "1": "",
+    "2": "",
+    "3": ""
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "",
+     "latency": {
+      "p50": 6079.0,
+      "p95": 6939.349999999995,
+      "p99": 7004.069999999989
+     },
+     "losses": 0,
+     "makespan_s": 7.266,
+     "out_of_order": 0,
+     "pipeline_tput": 2752.546105147261,
+     "producer_tput": 16666.666666666668,
+     "recovery_ms": null,
+     "runid": "B-baseline-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "",
+     "latency": {
+      "p50": 4101.5,
+      "p95": 5019.299999999996,
+      "p99": 5078.069999999989
+     },
+     "losses": 0,
+     "makespan_s": 5.302,
+     "out_of_order": 0,
+     "pipeline_tput": 3772.1614485099967,
+     "producer_tput": 28818.443804034585,
+     "recovery_ms": null,
+     "runid": "B-baseline-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "",
+     "latency": {
+      "p50": 4562.5,
+      "p95": 5715.249999999996,
+      "p99": 5776.05999999999
+     },
+     "losses": 0,
+     "makespan_s": 5.992,
+     "out_of_order": 0,
+     "pipeline_tput": 3337.7837116154874,
+     "producer_tput": 29806.259314456034,
+     "recovery_ms": null,
+     "runid": "B-baseline-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  },
+  "B-broker_kill": {
+   "injection_notes": {
+    "1": "docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage",
+    "2": "docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage",
+    "3": "docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage"
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": 1,
+     "duplicates": 0,
+     "injection_note": "docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage",
+     "latency": {
+      "p50": 28869.0,
+      "p95": 30206.949999999986,
+      "p99": 30286.06999999999
+     },
+     "losses": 0,
+     "makespan_s": 30.547,
+     "out_of_order": 0,
+     "pipeline_tput": 654.7287786034635,
+     "producer_tput": 28776.97841726619,
+     "recovery_ms": 22401,
+     "runid": "B-broker_kill-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": 1,
+     "duplicates": 0,
+     "injection_note": "docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage",
+     "latency": {
+      "p50": 28714.0,
+      "p95": 30174.449999999993,
+      "p99": 30316.06999999999
+     },
+     "losses": 0,
+     "makespan_s": 30.57,
+     "out_of_order": 0,
+     "pipeline_tput": 654.2361792607131,
+     "producer_tput": 27173.91304347826,
+     "recovery_ms": 22403,
+     "runid": "B-broker_kill-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": 1,
+     "duplicates": 0,
+     "injection_note": "docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage",
+     "latency": {
+      "p50": 29114.5,
+      "p95": 30368.399999999994,
+      "p99": 30440.06999999999
+     },
+     "losses": 0,
+     "makespan_s": 30.669,
+     "out_of_order": 0,
+     "pipeline_tput": 652.1242948906062,
+     "producer_tput": 29325.513196480937,
+     "recovery_ms": 22405,
+     "runid": "B-broker_kill-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  },
+  "B-consumer_kill": {
+   "injection_notes": {
+    "1": "SIGKILL delivered; processor restarted after 5 s",
+    "2": "SIGKILL delivered; processor restarted after 5 s",
+    "3": "SIGKILL delivered; processor restarted after 5 s"
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "SIGKILL delivered; processor restarted after 5 s",
+     "latency": {
+      "p50": 48659.0,
+      "p95": 49812.299999999996,
+      "p99": 49863.03999999999
+     },
+     "losses": 0,
+     "makespan_s": 50.052,
+     "out_of_order": 0,
+     "pipeline_tput": 399.58443219052185,
+     "producer_tput": 29368.57562408223,
+     "recovery_ms": null,
+     "runid": "B-consumer_kill-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "SIGKILL delivered; processor restarted after 5 s",
+     "latency": {
+      "p50": 48379.5,
+      "p95": 48989.2,
+      "p99": 49035.04999999999
+     },
+     "losses": 0,
+     "makespan_s": 49.248,
+     "out_of_order": 0,
+     "pipeline_tput": 406.10786224821317,
+     "producer_tput": 29411.76470588235,
+     "recovery_ms": null,
+     "runid": "B-consumer_kill-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "SIGKILL delivered; processor restarted after 5 s",
+     "latency": {
+      "p50": 48339.5,
+      "p95": 48900.1,
+      "p99": 48938.05999999999
+     },
+     "losses": 0,
+     "makespan_s": 49.148,
+     "out_of_order": 0,
+     "pipeline_tput": 406.93415805322695,
+     "producer_tput": 29629.629629629628,
+     "recovery_ms": null,
+     "runid": "B-consumer_kill-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  },
+  "B-rebalance_kill": {
+   "injection_notes": {
+    "1": "second member joined; SIGKILL delivered to the first processor",
+    "2": "first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream",
+    "3": "first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream"
+   },
+   "metrics": {
+    "1": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "second member joined; SIGKILL delivered to the first processor",
+     "latency": {
+      "p50": 4685.5,
+      "p95": 48855.25,
+      "p99": 48913.049999999996
+     },
+     "losses": 0,
+     "makespan_s": 49.152,
+     "out_of_order": 0,
+     "pipeline_tput": 406.9010416666667,
+     "producer_tput": 28449.50213371266,
+     "recovery_ms": null,
+     "runid": "B-rebalance_kill-r1",
+     "unique": 20000
+    },
+    "2": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream",
+     "latency": {
+      "p50": 48218.5,
+      "p95": 49022.25,
+      "p99": 49101.06999999999
+     },
+     "losses": 0,
+     "makespan_s": 49.324,
+     "out_of_order": 0,
+     "pipeline_tput": 405.4821182385857,
+     "producer_tput": 29069.76744186047,
+     "recovery_ms": null,
+     "runid": "B-rebalance_kill-r2",
+     "unique": 20000
+    },
+    "3": {
+     "ack_gap_ms": null,
+     "duplicates": 0,
+     "injection_note": "first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream",
+     "latency": {
+      "p50": 4206.0,
+      "p95": 48546.25,
+      "p99": 48600.07999999999
+     },
+     "losses": 0,
+     "makespan_s": 48.82,
+     "out_of_order": 0,
+     "pipeline_tput": 409.6681687832855,
+     "producer_tput": 16849.199663016007,
+     "recovery_ms": null,
+     "runid": "B-rebalance_kill-r3",
+     "unique": 20000
+    }
+   },
+   "scored_reps": [
+    1,
+    2,
+    3
+   ]
+  }
+ },
+ "h2_ratio": 0.6340120160213618,
+ "verdicts": {
+  "H1": "CONFIRMED",
+  "H2": "CONFIRMED",
+  "H3": "CONFIRMED"
+ }
+}
