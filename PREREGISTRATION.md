@@ -220,3 +220,51 @@ Section 9. Nothing is hand-typed. A broker or pipeline failure that
 prevents a whole scenario cell from completing is reported as the
 result for that cell, and the affected hypotheses follow their
 INCONCLUSIVE rules; the study does not quietly shrink its matrix.
+
+## Amendment A1 (2026-11-08, recorded before any measured run)
+
+Two things change. Everything else in Sections 1 to 10 stands
+exactly as frozen, including the workload, both configurations, the
+fault schedule, the metric definitions, and the hypothesis
+thresholds. No measured run existed when this amendment was written,
+so no result is affected by it.
+
+1. Machine of record. Section 7 named the Muse VM (hostname
+htch-runtime). That machine cannot run the broker at all. Evidence,
+all from 2026-11-08 before any measured run: six broker starts of
+the hash-verified Apache Kafka 3.9.0 tarball under Temurin JRE 21,
+across three listener forms (localhost, literal 127.0.0.1, and the
+host interface address) and two port pairs (9092/9093 and
+19092/19093), on a loaded VM and again on a freshly rebooted quiet
+VM. Every start behaved identically: the KRaft controller elected
+itself within a second and listened on its port, TCP connections to
+that port connected, but no Kafka protocol response ever came back;
+the broker's registration channel timed out and the broker exited
+fatally after about 60 seconds. An independent Java client
+(kafka-broker-api-versions) was disconnected the same way, and a
+librdkafka client got a transport failure, while a plain Python TCP
+echo on the same ports transferred data normally. The root cause
+inside the VM's sandboxed network stack was not identified; the
+empirical fact is multiply verified. The machine of record is
+therefore BlackBoxV2 (hostname BlackBoxV2, Ubuntu, 8 CPUs, 15 GiB
+RAM, Docker 29.9.2), a fleet machine with ordinary networking. It
+is also a shared machine: other services run on it and none is
+stopped for this study, so the co-tenancy caveat of Section 7
+carries over unchanged. No number from the Muse VM is reported in
+this study.
+
+2. Broker packaging. The declared deviation in Section 5 is
+withdrawn. BlackBoxV2 has Docker, so the broker runs exactly as the
+brief asked: the shipped docker-compose.yml, image
+apache/kafka:3.9.0, single-node KRaft, heap capped at 512 MiB via
+KAFKA_HEAP_OPTS, container limits 1 GiB memory and 2 CPUs, data in
+a named volume. The broker kill fault is docker kill, whose default
+signal is SIGKILL to the broker process, and docker start restarts
+the same container on the same volume, which is the same log
+directory semantics Section 6 froze. Broker properties by meaning
+are unchanged. The harness interpreter on the machine of record is
+Python 3.14.4; the client stack is the identical pin
+(confluent-kafka 2.16.1, librdkafka 2.16.0), and exact versions are
+recorded in results/versions.json as Section 7 requires.
+
+Recorded as DECISIONS.md D5, which supersedes D1.
