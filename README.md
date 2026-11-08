@@ -127,6 +127,9 @@ python3 -m pytest               # counting and percentile tests
   analysis can be recomputed from this repository alone.
 - results/jev-claim-check.json: the Jev claim_check gate record
   for the headline verdicts (REVIEW route, hand-verified).
+- results/machine-of-record-failure.log.gz: one of the six failed
+  broker start logs from the originally named machine, the raw
+  evidence behind Amendment A1.
 - DECISIONS.md: build decisions D1 to D5.
 - AUDIT.md: the grade, itemised deductions, and what was verified.
 - src/: source producer, processor, verifier, shared codec.
