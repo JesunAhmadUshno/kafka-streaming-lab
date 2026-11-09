@@ -40,6 +40,31 @@ stated limits. Nothing here is rounded up.
   offset appears in a 300-message smoke run, where drain time is
   negligible. The numbers are reported as defined; they must not
   be read as broker transit times.
+- **Fault triggers fired late; the driver's polling lagged the
+  locked thresholds (recorded 2026-11-08, after an independent
+  review).** The locked schedule fires each fault when a progress
+  counter first reaches its threshold (consumed 5,000 for
+  consumer_kill and rebalance_kill, acked 10,000 for broker_kill).
+  The driver reads progress files (written every 100 messages by
+  the processor and every 500 sends by the source) on a 0.1 s
+  loop, and the pipeline moves thousands of messages per second,
+  so every trigger fired at or after its threshold, some well
+  after. Configuration A, from the
+  run events: consumer_kill at consumed 5,200, 8,900 and 5,300;
+  broker_kill at acked 14,661, 10,604 and 12,192; rebalance_kill
+  second member at consumed 8,000, 9,700 and 7,500. Configuration
+  B: consumer_kill at 5,100, 5,700 and 5,800; rebalance_kill at
+  5,100, 6,100 and 5,400; broker_kill at 20,001 (see the item
+  above). The headline outlier of 8,805 duplicates is
+  A-consumer_kill-r2, killed at consumed 8,900, 44.5 percent of N
+  instead of the locked 25 percent, so its count reflects a later
+  kill than the plan specified and the 5,141 to 8,805 range is
+  partly a trigger-timing spread. No verdict changes: H1 needs duplicates in at
+  least 2 of 3 A consumer_kill runs and zero in B, which holds at
+  every trigger point observed, and H3 counts acknowledged losses,
+  which are zero regardless of when the kill landed. The actual
+  trigger count is now printed on every fault run's injection note
+  in RESULTS.md, generated from the run events.
 - **The machine of record had to move mid-build.** The
   originally named VM cannot run the Kafka broker at all (six
   starts, identical controller-registration failure, verified with
@@ -199,10 +224,14 @@ stated limits. Nothing here is rounded up.
 - D4 (127.0.0.1 listener binding) was a harness correction from
   the failed bring-up on the original machine; the same binding is
   used for the published port and client bootstrap on BlackBoxV2.
-- No frozen element changed: workload, both configurations, fault
+- No frozen element was edited: workload, both configurations, fault
   schedule, metric definitions, hypothesis thresholds, and verdict
-  rules are exactly as locked in the first content commit
-  (027ef11) plus Amendment A1.
+  rules are as locked in the first content commit (027ef11) plus
+  Amendment A1. The fault schedule was not executed exactly as
+  locked: triggers fired late because of the driver's polling lag
+  (Deviations and limits on record, recorded 2026-11-08), and the
+  A rebalance_kill and B broker_kill cells are degraded as stated
+  there.
 
 ## What a second version should fix
 

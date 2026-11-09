@@ -129,6 +129,9 @@ per-run injection notes are in RESULTS.md.
 - **Consumer kill, configuration A:** the restarted consumer
   reprocessed everything its periodic offset commits had not yet
   covered. Duplicates: 5,141, 8,805 and 5,349. Losses: zero. The
+  driver's polling fired the kills late, at consumed 5,200, 8,900
+  and 5,300 against the locked 5,000; the 8,805 run was killed at
+  44.5 percent of the stream (AUDIT.md, Deviations). The
   pipeline also stalled for about 45 seconds before the partition
   was reassigned, matching the client default session timeout of
   45 s: a hard kill is only noticed when the session expires.

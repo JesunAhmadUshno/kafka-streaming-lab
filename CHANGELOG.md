@@ -17,6 +17,13 @@ Versions follow Semantic Versioning; no release is tagged yet.
   in results/ack-logs/ when the machine-of-record work folder is
   absent. CodeQL and Dependabot added; CI token is read-only.
 
+### Fixed
+- 2026-11-08: Late fault triggers disclosed. RESULTS.md injection
+  notes now print the actual trigger count from each run's events
+  against the locked threshold; AUDIT.md records the driver's
+  polling lag as a deviation and no longer says the fault schedule
+  ran exactly as locked. No verdict changes.
+
 ### Added
 - 2026-11-08: The failed broker start log behind Amendment A1.
 - 2026-11-08: README and AUDIT.
