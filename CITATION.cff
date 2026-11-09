@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "kafka-streaming-lab: what Kafka's at-least-once and exactly-once delivery cost and guarantee under consumer and broker kills, a pre-registered study"
+authors:
+  - family-names: Ushno
+    given-names: Jesun Ahmad
+repository-code: "https://github.com/JesunAhmadUshno/kafka-streaming-lab"
+license: Apache-2.0
+date-released: 2026-11-08

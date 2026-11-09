@@ -1,7 +1,10 @@
 name: CI
 on:
   push:
+    branches: [main]
   pull_request:
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,12 +18,19 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install
         run: pip install -r requirements.txt
-      - name: Unit and semantic tests
+      - name: Unit, semantic and layout tests
         run: python -m pytest tests/ -q
       - name: Compile all study code
         run: python -m compileall -q src scripts
+      - name: Results regenerate unchanged from the recorded evidence
+        run: |
+          python scripts/ack_gap_analysis.py
+          python scripts/make_results.py
+          git diff --exit-code RESULTS.md results/
+      - name: Validate compose file
+        run: docker compose config -q
       - name: No em dash in prose
         run: |
-          if grep -rn $'\u2014' --include='*.md' . ; then
+          if grep -rn $'—' --include='*.md' . ; then
             echo "em dash found in markdown" && exit 1
           fi
