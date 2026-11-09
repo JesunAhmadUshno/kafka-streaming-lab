@@ -28,27 +28,27 @@ see results/ack_gaps.json.
 | A-baseline-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a |  |
 | A-baseline-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a |  |
 | A-baseline-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a |  |
-| A-consumer_kill-r1 | completed | 5141 | 0 | 5140 | 20000 | n/a | n/a | SIGKILL delivered; processor restarted after 5 s |
-| A-consumer_kill-r2 | completed | 8805 | 0 | 8804 | 20000 | n/a | n/a | SIGKILL delivered; processor restarted after 5 s |
-| A-consumer_kill-r3 | completed | 5349 | 0 | 5348 | 20000 | n/a | n/a | SIGKILL delivered; processor restarted after 5 s |
-| A-broker_kill-r1 | completed | 292 | 0 | 291 | 20000 | 22,409.0 | 22,801.0 | docker kill delivered; broker restarted after 5 s on the same volume |
-| A-broker_kill-r2 | completed | 0 | 0 | 0 | 20000 | 22,493.0 | 28,469.0 | docker kill delivered; broker restarted after 5 s on the same volume |
-| A-broker_kill-r3 | completed | 0 | 0 | 0 | 20000 | 22,408.0 | 23,505.0 | docker kill delivered; broker restarted after 5 s on the same volume |
-| A-rebalance_kill-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing |
-| A-rebalance_kill-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing |
-| A-rebalance_kill-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing |
+| A-consumer_kill-r1 | completed | 5141 | 0 | 5140 | 20000 | n/a | n/a | triggered at consumed 5,200 (26.0 percent of N; locked trigger 5,000); SIGKILL delivered; processor restarted after 5 s |
+| A-consumer_kill-r2 | completed | 8805 | 0 | 8804 | 20000 | n/a | n/a | triggered at consumed 8,900 (44.5 percent of N; locked trigger 5,000); SIGKILL delivered; processor restarted after 5 s |
+| A-consumer_kill-r3 | completed | 5349 | 0 | 5348 | 20000 | n/a | n/a | triggered at consumed 5,300 (26.5 percent of N; locked trigger 5,000); SIGKILL delivered; processor restarted after 5 s |
+| A-broker_kill-r1 | completed | 292 | 0 | 291 | 20000 | 22,409.0 | 22,801.0 | triggered at acked 14,661 (73.3 percent of N; locked trigger 10,000); docker kill delivered; broker restarted after 5 s on the same volume |
+| A-broker_kill-r2 | completed | 0 | 0 | 0 | 20000 | 22,493.0 | 28,469.0 | triggered at acked 10,604 (53.0 percent of N; locked trigger 10,000); docker kill delivered; broker restarted after 5 s on the same volume |
+| A-broker_kill-r3 | completed | 0 | 0 | 0 | 20000 | 22,408.0 | 23,505.0 | triggered at acked 12,192 (61.0 percent of N; locked trigger 10,000); docker kill delivered; broker restarted after 5 s on the same volume |
+| A-rebalance_kill-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 8,000 (40.0 percent of N; locked trigger 5,000); kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing |
+| A-rebalance_kill-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 9,700 (48.5 percent of N; locked trigger 5,000); kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing |
+| A-rebalance_kill-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 7,500 (37.5 percent of N; locked trigger 5,000); kill not delivered: the first processor completed the whole stream inside the 1.0 s window; the second member processed nothing |
 | B-baseline-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a |  |
 | B-baseline-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a |  |
 | B-baseline-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a |  |
-| B-consumer_kill-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | SIGKILL delivered; processor restarted after 5 s |
-| B-consumer_kill-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | SIGKILL delivered; processor restarted after 5 s |
-| B-consumer_kill-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | SIGKILL delivered; processor restarted after 5 s |
-| B-broker_kill-r1 | completed | 0 | 0 | 0 | 20000 | 22,401.0 | 1.0 | docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage |
-| B-broker_kill-r2 | completed | 0 | 0 | 0 | 20000 | 22,403.0 | 1.0 | docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage |
-| B-broker_kill-r3 | completed | 0 | 0 | 0 | 20000 | 22,405.0 | 1.0 | docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage |
-| B-rebalance_kill-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | second member joined; SIGKILL delivered to the first processor |
-| B-rebalance_kill-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream |
-| B-rebalance_kill-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream |
+| B-consumer_kill-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 5,100 (25.5 percent of N; locked trigger 5,000); SIGKILL delivered; processor restarted after 5 s |
+| B-consumer_kill-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 5,700 (28.5 percent of N; locked trigger 5,000); SIGKILL delivered; processor restarted after 5 s |
+| B-consumer_kill-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 5,800 (29.0 percent of N; locked trigger 5,000); SIGKILL delivered; processor restarted after 5 s |
+| B-broker_kill-r1 | completed | 0 | 0 | 0 | 20000 | 22,401.0 | 1.0 | triggered at acked 20,001 (100.0 percent of N; locked trigger 10,000); docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage |
+| B-broker_kill-r2 | completed | 0 | 0 | 0 | 20000 | 22,403.0 | 1.0 | triggered at acked 20,001 (100.0 percent of N; locked trigger 10,000); docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage |
+| B-broker_kill-r3 | completed | 0 | 0 | 0 | 20000 | 22,405.0 | 1.0 | triggered at acked 20,001 (100.0 percent of N; locked trigger 10,000); docker kill delivered; broker restarted after 5 s on the same volume; the source had already fully acknowledged before the kill (it finishes in under a second; the driver's progress check lagged), so the kill interrupted the processor stage |
+| B-rebalance_kill-r1 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 5,100 (25.5 percent of N; locked trigger 5,000); second member joined; SIGKILL delivered to the first processor |
+| B-rebalance_kill-r2 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 6,100 (30.5 percent of N; locked trigger 5,000); first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream |
+| B-rebalance_kill-r3 | completed | 0 | 0 | 0 | 20000 | n/a | n/a | triggered at consumed 5,400 (27.0 percent of N; locked trigger 5,000); first processor exited by transactional fencing (_FENCED) when the second member initialised the shared transactional.id, before the scheduled SIGKILL; the second member completed the stream |
 
 ## Per-run performance
 

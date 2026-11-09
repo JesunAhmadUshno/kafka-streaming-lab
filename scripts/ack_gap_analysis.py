@@ -1,7 +1,8 @@
 """Acknowledgement-gap analysis for broker_kill runs.
 
 Reads the raw source acknowledgement logs (.work/runs/<runid>/
-ack_log.jsonl) on the machine of record and writes
+ack_log.jsonl on the machine of record, else the gzipped copies in
+results/ack-logs/<runid>.ack.jsonl.gz shipped in this repo) and writes
 results/ack_gaps.json with, per broker_kill run, the longest gap
 between consecutive successful acknowledgements. In a broker_kill
 run that gap is the outage silence: the interval during which the
@@ -10,12 +11,13 @@ producer received no acknowledgement at all.
 This replaces the driver's first-pass ack_gap_ms, which measured
 across the driver's trigger timestamp (recorded before docker kill
 actually stopped the broker) and so produced artifacts; see
-AUDIT.md. Run on the machine of record after the matrix:
+AUDIT.md. Run after the matrix (CI runs it over the shipped logs):
 
     python3 scripts/ack_gap_analysis.py
 """
 
 import glob
+import gzip
 import json
 import os
 import sys
@@ -31,10 +33,12 @@ def main():
         runid = rec["runid"]
         log_path = os.path.join(REPO, ".work", "runs", runid, "ack_log.jsonl")
         if not os.path.exists(log_path):
+            log_path = os.path.join(REPO, "results", "ack-logs", runid + ".ack.jsonl.gz")
+        if not os.path.exists(log_path):
             print(f"{runid}: ack log not found at {log_path}, skipped")
             continue
         acks = []
-        with open(log_path) as fh:
+        with gzip.open(log_path, "rt") if log_path.endswith(".gz") else open(log_path) as fh:
             for line in fh:
                 entry = json.loads(line)
                 if entry["err"] is None:

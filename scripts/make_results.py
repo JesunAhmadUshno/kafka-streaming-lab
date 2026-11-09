@@ -22,9 +22,41 @@ def load_runs():
     return runs
 
 
+# Locked trigger points (PREREGISTRATION.md Section 6): the event the
+# driver logs when it fires, the progress counter it reads, the threshold.
+TRIGGERS = {
+    "consumer_kill": ("consumer_killed", "consumed", 5000),
+    "broker_kill": ("broker_killed", "acked", 10000),
+    "rebalance_kill": ("second_processor_started", "consumed", 5000),
+}
+
+
+def trigger_note(rec):
+    """Where the fault actually fired, read from the run's events, against
+    the locked threshold. The driver polls progress files, so it can fire
+    late; this makes every late trigger visible on its row."""
+    spec = TRIGGERS.get(rec["scenario"])
+    if not spec:
+        return ""
+    event, counter, locked = spec
+    for e in rec.get("events", []):
+        if e.get("event") == event and e.get(counter) is not None:
+            got = e[counter]
+            return (
+                f"triggered at {counter} {got:,} ({100 * got / rec['n']:.1f} percent "
+                f"of N; locked trigger {locked:,})"
+            )
+    return ""
+
+
 def injection_note(rec):
-    """What actually happened to the fault injection in this run,
-    derived from the run record's events and processor summaries."""
+    """What actually happened to the fault injection in this run, with the
+    actual trigger point, derived from the run record."""
+    base, trig = _injection_outcome(rec), trigger_note(rec)
+    return "; ".join(x for x in (trig, base) if x)
+
+
+def _injection_outcome(rec):
     events = [e.get("event") for e in rec.get("events", [])]
     p1 = rec.get("proc1_summary") or {}
     if rec["scenario"] == "consumer_kill":
